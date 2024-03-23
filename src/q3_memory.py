@@ -6,25 +6,42 @@ from helpers.mentions import extract_mentions
 
 def process_chunk(chunk: pd.DataFrame) -> Counter:
     """
-    Processes a chunk of the dataset to count mentions.
+    Counts mentions in a dataframe chunk.
+    
+    Returns:
+        Counter: Counts of mentions within the chunk.
     """
+
     mentions_list = chunk['content'].apply(extract_mentions).explode().tolist()
     mentions_count = Counter(mentions_list)
     return mentions_count
 
 def aggregate_counts(counters: list) -> Counter:
     """
-    Aggregates counts from a list of Counter objects.
+    Combines counts from multiple Counter objects.
+    
+    Returns:
+        Counter: The total count for all mentions
     """
+
     total_counts = Counter()
     for counter in counters:
         total_counts.update(counter)
     return total_counts
 
-def find_top_influencers(file_path: str, chunksize: int = 10000, top_n: int = 10):
+def find_top_influencers(file_path: str, chunksize: int = 1000, top_n: int = 10):
     """
-    Finds the top N influencers by processing the dataset in chunks.
+    Identifies top influencers based on mentions by processing a JSON file in chunks.
+    
+    Args:
+        file_path (str): Path to the JSON file.
+        chunksize (int): Size of the chunks to read at once (default 1000).
+        top_n (int): Number of top influencers to return (default 10).
+    
+    Returns:
+        List[Tuple[str, int]]: Top influencers and their mention counts.
     """
+
     chunk_iter = pd.read_json(file_path, lines=True, chunksize=chunksize)
     counters = []
 
@@ -37,5 +54,6 @@ def find_top_influencers(file_path: str, chunksize: int = 10000, top_n: int = 10
 
 
 def q3_memory(file_path: str) -> List[Tuple[str, int]]:
+   
    return find_top_influencers(file_path, chunksize=10000, top_n=10)
     
