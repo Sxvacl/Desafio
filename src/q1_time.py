@@ -7,11 +7,12 @@ from pyspark.sql.functions import col, to_date
 
 def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
     """
-         This function use pyspark to get the top 10 dates with the most tweets by user
-        @ param -> filepath
-        
+    Retrieves the top 10 dates with the highest number of tweets per user from a JSON file.
+    
+    Returns:
+        List[Tuple[datetime.date, str]]: List of (date, username) tuples for the top 10 dates.
     """
-
+    
     spark = SparkSession.builder.appName("TwitterDataAnalysis").getOrCreate()
 
     twitts_df = spark.read.json(file_path)

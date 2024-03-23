@@ -1,6 +1,3 @@
-
-from typing import List, Tuple
-from datetime import datetime
 from typing import List, Tuple
 import pandas as pd
 from datetime import datetime
@@ -8,11 +5,11 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 
 # chunksize for chunk files
-CHUNKSIZE = 10000000
+CHUNKSIZE = 1000
 
 
 def process_chunk(chunk:pd.DataFrame):
-   """
+    """
         Processes a chunk of the JSON file to obtain the count of messages by date and user.
         
         Parameters:
@@ -38,6 +35,7 @@ def combine_results(results:list[pd.DataFrame]):
         Returns:
         - DataFrame: A DataFrame containing the combination of all chunks' results.
     """
+
     aggregated_df = pd.DataFrame()
 
     for result in results:
@@ -59,6 +57,7 @@ def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
         - List[Tuple[datetime.date, str]]: A list of tuples, where each tuple contains a date and a username,
         representing the top 10 most active users and their corresponding dates.
     """
+
     futures = []
     
     with ProcessPoolExecutor() as executor:
